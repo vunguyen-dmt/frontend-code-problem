@@ -55,10 +55,9 @@ const IframeMaker = ({ intl }) => {
     document.body.appendChild(textarea);
     textarea.select();
     try {
-      return document.execCommand('copy'); // Security exception may be thrown by some browsers.
+      return document.execCommand('copy');
     } catch (ex) {
-      console.warn('Copy to clipboard failed.', ex);
-      return prompt('Copy to clipboard: Ctrl+C, Enter', text);
+      return '';
     } finally {
       document.body.removeChild(textarea);
     }
