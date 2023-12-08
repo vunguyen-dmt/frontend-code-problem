@@ -1,0 +1,59 @@
+.code-app-wrapper {
+    border: 1px solid #ccc;
+    margin: 1rem;
+    .tool-btns {
+        .btn {
+          margin-right: 5px;
+        }
+        .run-btn {
+            background-color: #00262b;
+            border-color: #00262b;
+            box-shadow: none;
+            color: #fff;
+
+            text-align: left;
+            width: 86px;
+            .pgn__spinner {
+                width: 11.67px;
+                height: 11.67px;
+                margin-inline-start: 0.8rem;
+                display: block;
+            }          
+        }
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+
+    .devider {
+        border-bottom: 1px solid #ccc;
+        margin: 5px 0;
+    }
+
+    .output {
+        min-height: 50px;
+        background-color: #1E1E1E;
+        color: white;
+        padding: 10px 18px;
+        overflow-y: auto;
+        font-size: 14px;
+        white-space: pre-wrap;
+        padding-bottom: 15px;
+    }
+
+    .output-title {
+        font-weight: bold;
+        margin: 15px 5px;
+    }
+
+    .alert {
+        box-shadow: none;
+        font-size: 14px;
+    }
+
+    &.vs-dark {
+        .run-btn {
+            background-color: #1E1E1E;
+        }
+    }
+}

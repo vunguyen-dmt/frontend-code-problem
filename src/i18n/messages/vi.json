@@ -1,0 +1,18 @@
+{
+    "code.run" : "Chạy",
+    "code.stop" : "Dừng",
+    "code.output": "Kết quả",
+    "code.light": "Sáng",
+    "code.dark": "Tối",
+    "code.version": "Phiên bản",
+    "code.theme": "Giao diện",
+    "code.language": "Ngôn ngữ",
+    "code.codeWindowHeight": "Chiều cao cửa sổ code",
+    "code.enterYourDefaultCode": "Nhập code mặc định",
+    "code.copy": "Sao chép",
+    "code.copied": "Đã sao chép",
+    "code.someThingWentWrong": "Có lỗi xảy ra, vui lòng thử lại sau!",
+    "code.error": "Lỗi",
+    "code.codeTooLong": "Code mặc định của bạn quá dày.",
+    "code.processing": "Đang xử lý..."
+}
