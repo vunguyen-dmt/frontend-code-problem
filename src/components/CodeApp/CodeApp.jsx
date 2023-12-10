@@ -32,7 +32,6 @@ const CodeApp = ({ intl }) => {
   };
 
   const supportedThemes = ['vs', 'vs-dark'];
-
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
   const [running, setRunning] = React.useState(false);
@@ -86,6 +85,7 @@ const CodeApp = ({ intl }) => {
         setRunning(false);
       }).catch(error => {
         setRunning(false);
+        setConsoleOutput('');
         console.log(error);
         setErrorMessage(intl.formatMessage(messages.somethingWentWrong));
       });
@@ -108,7 +108,7 @@ const CodeApp = ({ intl }) => {
         theme={theme}
         onMount={handleEditorDidMount}
       />
-      <div className="output-title">Output</div>
+      <div className="output-title">{intl.formatMessage(messages.output)}</div>
       {errorMessage && (
       <div className="alert alert-danger" role="alert">
         {errorMessage}

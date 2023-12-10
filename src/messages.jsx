@@ -81,6 +81,11 @@ const messages = defineMessages({
     defaultMessage: 'Processing...',
     description: '',
   },
+  embedCode: {
+    id: 'code.embedCode',
+    defaultMessage: 'Embed code',
+    description: '',
+  },
 });
 
 export default messages;

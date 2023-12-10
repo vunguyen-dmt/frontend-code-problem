@@ -8,3 +8,8 @@ export const sendCode = (query) => {
   }
   return getHttpClient().post(baseUrl, query);
 };
+
+export const getStudioMe = () => {
+  const baseUrl = getConfig().STUDIO_BASE_URL;
+  return getAuthenticatedHttpClient().get(`${baseUrl}/api/user/v1/me`);
+};

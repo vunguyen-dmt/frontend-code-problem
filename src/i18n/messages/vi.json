@@ -14,5 +14,6 @@
     "code.someThingWentWrong": "Có lỗi xảy ra, vui lòng thử lại sau!",
     "code.error": "Lỗi",
     "code.codeTooLong": "Code mặc định của bạn quá dày.",
-    "code.processing": "Đang xử lý..."
+    "code.processing": "Đang xử lý...",
+    "code.embedCode": "Mã nhúng"
 }

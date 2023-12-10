@@ -7,20 +7,24 @@ import './IframeMaker.scss';
 import Editor from '@monaco-editor/react';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from '../../messages';
+import Header from '@edx/frontend-component-header';
+import Footer from '@edx/frontend-component-footer';
 
 const IframeMaker = ({ intl }) => {
-  const [iframeSrc, setIframeSrc] = React.useState('');
+  const [embedCode, setEmbedCode] = React.useState('');
   const [theme, setTheme] = React.useState('vs-dark');
   const [language, setLanguage] = React.useState('cpp');
   const [version, setVersion] = React.useState('v1');
   const [errorMessage, setErrorMessage] = React.useState('');
   const [height, setHeight] = React.useState('300');
 
+  const embedCodeRef = React.useRef();
   const themeRef = React.useRef();
   const languageRef = React.useRef();
   const versionRef = React.useRef();
   const heightRef = React.useRef();
 
+  embedCodeRef.current = embedCode;
   themeRef.current = theme;
   languageRef.current = language;
   versionRef.current = version;
@@ -35,22 +39,34 @@ const IframeMaker = ({ intl }) => {
     java: 'java',
   };
 
-  const updateIframeSrc = () => {
+  const updateEmbedCode = () => {
     setErrorMessage('');
     const { host } = window.location;
     const publicPath = window.location.host.endsWith('3000') ? '' : '/code';
-    setTimeout(() => {
-      const src = `https://${host}${publicPath}/editor/v1?language=${languageRef.current}&theme=${themeRef.current}&height=${heightRef.current}px&default_value=${encodeURIComponent(editorRef.current.getValue())}`;
-      if (src.length > 8000) {
-        setErrorMessage(intl.formatMessage(messages.codeTooLong));
-      }
-      setIframeSrc(src);
-    }, 100);
+    const iframeHeight = Number(heightRef.current) + 294;
+    const editorValue = editorRef && editorRef.current ? editorRef.current.getValue() : '';
+    const src = `https://${host}${publicPath}/editor/v1?language=${languageRef.current}&theme=${themeRef.current}&height=${heightRef.current}px&default_value=${encodeURIComponent(editorValue)}`;
+    if (src.length > 8000) {
+      setErrorMessage(intl.formatMessage(messages.codeTooLong));
+    }
+
+    const iframeEmbedCode = `<iframe
+    frameBorder="0"
+    width="100%"
+    height="${iframeHeight}"
+    src="${src}" 
+    />`;
+
+    setEmbedCode(iframeEmbedCode);
   };
+
+  React.useEffect(() => {
+    updateEmbedCode();
+  }, [theme, language, version, height]);
 
   const copy = () => {
     const textarea = document.createElement('textarea');
-    textarea.textContent = iframeSrc;
+    textarea.textContent = embedCodeRef.current;
     textarea.style.position = 'fixed';
     document.body.appendChild(textarea);
     textarea.select();
@@ -66,21 +82,18 @@ const IframeMaker = ({ intl }) => {
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
-    updateIframeSrc();
   };
 
   const selectTheme = (value) => {
     setTheme(value);
-    updateIframeSrc();
   };
 
   const selectLanguage = (value) => {
     setLanguage(value);
-    updateIframeSrc();
   };
 
   const handleOnChange = () => {
-    updateIframeSrc();
+    updateEmbedCode();
   };
 
   const heightChange = (e) => {
@@ -89,77 +102,78 @@ const IframeMaker = ({ intl }) => {
       value = '300';
     }
     setHeight(value);
-    updateIframeSrc();
   };
 
   return (
-    <div className="code-exchange-wrapper">
-      <p className="text-center font-weight-bold">Iframe Maker</p>
-      <div className="flex-wrapper">
-        <div>
-          <div className="font-weight-bold mb-1">{intl.formatMessage(messages.version)}</div>
-          <SelectMenu>
-            <MenuItem defaultSelected>v1</MenuItem>
-            <MenuItem disabled>v2</MenuItem>
-          </SelectMenu>
+    <div>
+      <Header />
+      <div className="code-exchange-wrapper">
+        <p className="text-center font-weight-bold">Iframe Maker</p>
+        <div className="flex-wrapper">
+          <div>
+            <div className="font-weight-bold mb-1">{intl.formatMessage(messages.version)}</div>
+            <SelectMenu>
+              <MenuItem defaultSelected>v1</MenuItem>
+              <MenuItem disabled>v2</MenuItem>
+            </SelectMenu>
+          </div>
+          <div>
+            <div className="font-weight-bold mb-1">{intl.formatMessage(messages.theme)}</div>
+            <SelectMenu>
+              <MenuItem onClick={() => selectTheme('vs')}>{intl.formatMessage(messages.light)}</MenuItem>
+              <MenuItem onClick={() => selectTheme('vs-dark')} defaultSelected>{intl.formatMessage(messages.dark)}</MenuItem>
+            </SelectMenu>
+          </div>
+          <div>
+            <div className="font-weight-bold mb-1">{intl.formatMessage(messages.language)}</div>
+            <SelectMenu>
+              <MenuItem defaultSelected onClick={() => selectLanguage('cpp')}>C++</MenuItem>
+              <MenuItem onClick={() => selectLanguage('c')}>C</MenuItem>
+              <MenuItem onClick={() => selectLanguage('java')}>Java</MenuItem>
+              <MenuItem onClick={() => selectLanguage('python3')}>Python 3</MenuItem>
+            </SelectMenu>
+          </div>
         </div>
-        <div>
-          <div className="font-weight-bold mb-1">{intl.formatMessage(messages.theme)}</div>
-          <SelectMenu>
-            <MenuItem onClick={() => selectTheme('vs')}>{intl.formatMessage(messages.light)}</MenuItem>
-            <MenuItem onClick={() => selectTheme('vs-dark')} defaultSelected>{intl.formatMessage(messages.dark)}</MenuItem>
-          </SelectMenu>
+
+        <div className="font-weight-bold mb-1">{intl.formatMessage(messages.codeWindowHeight)} (px)</div>
+        <div className="height-wrapper">
+          <Input onChange={(e) => heightChange(e)} type="number" defaultValue={height} />
         </div>
-        <div>
-          <div className="font-weight-bold mb-1">{intl.formatMessage(messages.language)}</div>
-          <SelectMenu>
-            <MenuItem defaultSelected onClick={() => selectLanguage('cpp')}>C++</MenuItem>
-            <MenuItem onClick={() => selectLanguage('c')}>C</MenuItem>
-            <MenuItem onClick={() => selectLanguage('java')}>Java</MenuItem>
-            <MenuItem onClick={() => selectLanguage('python3')}>Python 3</MenuItem>
-          </SelectMenu>
+        <div className="font-weight-bold mt-3 mb-1">{intl.formatMessage(messages.enterYourDefaultCode)}</div>
+        <div className="editor-wrapper">
+          <Editor
+            height={`${height}px`}
+            language={languageStyleExchange[language]}
+            theme={theme}
+            onMount={handleEditorDidMount}
+            onChange={handleOnChange}
+          />
         </div>
-      </div>
-
-      <div className="font-weight-bold mb-1">{intl.formatMessage(messages.codeWindowHeight)} (px)</div>
-      <div className="height-wrapper">
-        <Input onChange={(e) => heightChange(e)} type="number" defaultValue={height} />
-      </div>
-      <div className="font-weight-bold mt-3 mb-1">{intl.formatMessage(messages.enterYourDefaultCode)}</div>
-      <div className="editor-wrapper">
-        <Editor
-          height={`${height}px`}
-          language={languageStyleExchange[language]}
-          theme={theme}
-          onMount={handleEditorDidMount}
-          onChange={handleOnChange}
-        />
-      </div>
-
-      <div className="font-weight-bold mt-3 mb-1">Iframe src &nbsp;
-
-        <OverlayTrigger
-          trigger="click"
-          key="top-success"
-          placement="top"
-          overlay={(
-            <Popover id="popover-positioned-top" variant="success">
-              <Popover.Title as="h3"><Icon src={CheckCircle} /> {intl.formatMessage(messages.copied)}</Popover.Title>
-            </Popover>
+        <div className="font-weight-bold mt-3 mb-1">{intl.formatMessage(messages.embedCode)} &nbsp;
+          <OverlayTrigger
+            trigger="click"
+            key="top-success"
+            placement="top"
+            overlay={(
+              <Popover id="popover-positioned-top" variant="success">
+                <Popover.Title as="h3"><Icon src={CheckCircle} /> {intl.formatMessage(messages.copied)}</Popover.Title>
+              </Popover>
+          )}
+          >
+            <Button onClick={copy} variant="outline-primary" size="sm" className="mb-2 mb-sm-0">
+              {intl.formatMessage(messages.copy)}
+            </Button>
+          </OverlayTrigger>
+        </div>
+        {errorMessage && (
+        <Alert variant="danger" icon={Info}>
+          <Alert.Heading>{intl.formatMessage(messages.error)}</Alert.Heading>
+          <p>{errorMessage}</p>
+        </Alert>
         )}
-        >
-          <Button onClick={copy} variant="outline-primary" size="sm" className="mb-2 mb-sm-0">
-            {intl.formatMessage(messages.copy)}
-          </Button>
-        </OverlayTrigger>
+        <div>{embedCode}</div>
       </div>
-      {errorMessage && (
-      <Alert variant="danger" icon={Info}>
-        <Alert.Heading>{intl.formatMessage(messages.error)}</Alert.Heading>
-        <p>{errorMessage}</p>
-      </Alert>
-      )}
-      <div>{iframeSrc}</div>
+      <Footer />
     </div>
   );
 };
