@@ -1,21 +1,129 @@
 import React from 'react';
 import Editor from '@monaco-editor/react';
-import { Button, Spinner } from '@edx/paragon';
+import {
+  Button, Spinner, ModalDialog, ActionRow, useToggle, Form, Alert,
+} from '@edx/paragon';
 import './CodeApp.scss';
 import { PlayArrow } from '@edx/paragon/icons';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { sendCode } from '../../services/codeService';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { sendCode, submitFeedback } from '../../services/codeService';
 import messages from '../../messages';
 
-const ErrorMessage = (message) => <p>{message}</p>;
+const ErrorMessage = ({ message, intl }) => {
+  const [isOpen, open, close] = useToggle(false);
+  const [submitStatus, setSubmitStatus] = React.useState('unsubmit'); // unsubmit, submitting, submitted, failedToSubmit.
+  const defaultFeedbackMessage = intl.formatMessage(messages.reportDefaultFeedBack);
+  const [feedbackMessage, setFeedbackMessage] = React.useState(defaultFeedbackMessage);
+  const handleMessageChanged = (e) => {
+    setFeedbackMessage(e.target.value);
+  };
+
+  const submitReport = () => {
+    setSubmitStatus('submitting');
+    const user = getAuthenticatedUser();
+    const request = {
+      name: user.name,
+      email: user.email,
+      contactType: 'technical_bug_report',
+      message: feedbackMessage,
+      attachments: [],
+    };
+    submitFeedback(request).then(result => {
+      setSubmitStatus('submitted');
+    }).catch(error => {
+      setSubmitStatus('failedToSubmit');
+    });
+  };
+
+  const handleOpenModal = () => {
+    if (submitStatus !== 'submitting') {
+      setSubmitStatus('unsubmit');
+      setFeedbackMessage(defaultFeedbackMessage);
+    }
+    open();
+  };
+
+  return (
+    <div>
+      <Alert variant="danger">
+        {message}<br />
+        {intl.formatMessage(messages.ifTheErrorPersist)} , <a className="modal-trigger-link" onClick={handleOpenModal}>{intl.formatMessage(messages.clickHere)}</a> {intl.formatMessage(messages.toReport)}.
+      </Alert>
+      <ModalDialog
+        title="My dialog"
+        isOpen={isOpen}
+        onClose={close}
+        size="md"
+        variant="default"
+        hasCloseButton
+        isFullscreenOnMobile
+      >
+        <ModalDialog.Header>
+          <ModalDialog.Title>
+            {intl.formatMessage(messages.feedback)}
+          </ModalDialog.Title>
+        </ModalDialog.Header>
+        <ModalDialog.Body>
+          {
+            submitStatus !== 'submitted' && (
+              <>
+                {submitStatus === 'failedToSubmit' && (
+                <Alert variant="danger">
+                  {intl.formatMessage(messages.reportFailedToSubmit)}
+                </Alert>
+                )}
+                <Form.Group>
+                  <Form.Control
+                    autoResize
+                    as="textarea"
+                    value={feedbackMessage}
+                    disabled={submitStatus === 'submitting'}
+                    onChange={handleMessageChanged}
+                    floatingLabel={intl.formatMessage(messages.message)}
+                  />
+                </Form.Group>
+              </>
+            )
+          }
+          {
+          submitStatus === 'submitted' && (
+          <Alert variant="success">
+            {intl.formatMessage(messages.thankForSubmittingTheReport)}
+          </Alert>
+          )
+        }
+        </ModalDialog.Body>
+        <ModalDialog.Footer>
+          <ActionRow>
+            {
+              submitStatus !== 'submitted' && (
+                <>
+                  <ModalDialog.CloseButton variant="tertiary">
+                    {intl.formatMessage(messages.cancel)}
+                  </ModalDialog.CloseButton>
+                  <Button variant="primary" onClick={submitReport}>
+                    {intl.formatMessage(messages.submitReport)}&nbsp;
+                    {submitStatus === 'submitting' && <Spinner animation="border" variants="light" size="sm" />}
+                  </Button>
+                </>
+              )
+            }
+            {
+              submitStatus === 'submitted' && (
+                <ModalDialog.CloseButton variant="tertiary">
+                  Ok
+                </ModalDialog.CloseButton>
+              )
+            }
+          </ActionRow>
+        </ModalDialog.Footer>
+      </ModalDialog>
+    </div>
+  );
+};
 
 const CodeApp = ({ intl }) => {
-  const user = getAuthenticatedUser();
-  if (!user) {
-    return ErrorMessage('unathenticated');
-  }
-
   const supportedLanguages = ['c', 'cpp', 'python3', 'java'];
   const languageHandlerExchange = {
     c: 'c',
@@ -31,7 +139,6 @@ const CodeApp = ({ intl }) => {
     java: 'java',
   };
 
-  const supportedThemes = ['vs', 'vs-dark'];
   const editorRef = React.useRef(null);
   const monacoRef = React.useRef(null);
   const [running, setRunning] = React.useState(false);
@@ -86,8 +193,7 @@ const CodeApp = ({ intl }) => {
       }).catch(error => {
         setRunning(false);
         setConsoleOutput('');
-        console.log(error);
-        setErrorMessage(intl.formatMessage(messages.somethingWentWrong));
+        setErrorMessage(intl.formatMessage(messages.someThingWentWrongPleaseTryAgainLater));
       });
     }
     setRunning(!running);
@@ -109,11 +215,7 @@ const CodeApp = ({ intl }) => {
         onMount={handleEditorDidMount}
       />
       <div className="output-title">{intl.formatMessage(messages.output)}</div>
-      {errorMessage && (
-      <div className="alert alert-danger" role="alert">
-        {errorMessage}
-      </div>
-      )}
+      {errorMessage && <ErrorMessage message={errorMessage} intl={intl} />}
       <div className="output">
         <div>{consoleOutput}</div>
       </div>

@@ -11,9 +11,19 @@
     "code.enterYourDefaultCode": "Nhập code mặc định",
     "code.copy": "Sao chép",
     "code.copied": "Đã sao chép",
-    "code.someThingWentWrong": "Có lỗi xảy ra, vui lòng thử lại sau!",
+    "code.someThingWentWrongPleaseTryAgainLater": "Có lỗi xảy ra, vui lòng thử lại sau!",
     "code.error": "Lỗi",
     "code.codeTooLong": "Code mặc định của bạn quá dày.",
     "code.processing": "Đang xử lý...",
-    "code.embedCode": "Mã nhúng"
+    "code.embedCode": "Mã nhúng",
+    "code.message": "Nội dung",
+    "code.feedback": "Báo cáo",
+    "code.reportDefaultFeedBack": "Link bài học (nếu bạn trên web):\n<cung cấp link bài học>\n\nNgôn ngữ lập trình của bạn:\n<cung cấp ngôn ngữ lập trình của bạn>\n\nCode của bạn:\n<cung cấp code của bạn ở đây>\n\nThông tin khác:\n<cung cấp thêm thông tin khác nếu có>",
+    "code.ifTheErrorPersist": "Nếu lỗi vẫn tiếp diễn",
+    "code.clickHere": "nhấp vào đây",
+    "code.toReport": "để báo cáo",
+    "code.submitReport": "Gửi báo cáo",
+    "code.cancel": "Hủy",
+    "code.thankForSubmittingTheReport": "Báo cáo của bạn đã được gửi. Cảm ơn bạn đã báo cáo, chúng tôi sẽ tìm hiểu vấn đề này.",
+    "code.reportFailedToSubmit": "Gửi báo cáo không thành công. Vui lòng thử lại!"
 }
