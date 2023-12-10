@@ -13,7 +13,6 @@ const App = () => {
   const [studioInfo, setStudioInfo] = React.useState(null);
   React.useEffect(() => {
     getStudioMe().then(result => {
-      console.log(result);
       setStudioInfo(result);
     }).catch(error => {
       if (!window.location.pathname.endsWith('/denied')) {

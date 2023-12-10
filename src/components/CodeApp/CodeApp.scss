@@ -51,6 +51,12 @@
         font-size: 14px;
     }
 
+    .modal-trigger-link {
+        text-decoration: underline;
+        color: #006daa;
+        cursor: pointer;
+    }
+    
     &.vs-dark {
         .run-btn {
             background-color: #1E1E1E;

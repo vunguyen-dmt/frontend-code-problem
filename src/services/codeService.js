@@ -13,3 +13,8 @@ export const getStudioMe = () => {
   const baseUrl = getConfig().STUDIO_BASE_URL;
   return getAuthenticatedHttpClient().get(`${baseUrl}/api/user/v1/me`);
 };
+
+export const submitFeedback = (request) => {
+  const baseUrl = 'https://learner-help-api.goamazing.org';
+  return getHttpClient().post(`${baseUrl}/support/from_bot`, request);
+};
