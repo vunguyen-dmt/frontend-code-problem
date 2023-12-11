@@ -1,10 +1,10 @@
 {
-  "name": "@edx/frontend-template-application",
+  "name": "@ga/frontend-app-code",
   "version": "0.1.0",
   "description": "Frontend application template",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openedx/frontend-template-application.git"
+    "url": "git+https://github.com/vunguyen-dmt/frontend-app-code.git"
   },
   "browserslist": [
     "extends @edx/browserslist-config"

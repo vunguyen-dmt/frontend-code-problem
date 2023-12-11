@@ -1,0 +1,20 @@
+.code-exchange-wrapper {
+    margin: 1rem;
+    .editor-wrapper {
+        border: 1px solid #ccc;
+    }
+    
+    .height-wrapper {
+        width: 96px;
+    }
+    .flex-wrapper {
+        display: flex;
+        align-items: center;
+        >div {
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+        flex-wrap: wrap;
+    }
+}
+

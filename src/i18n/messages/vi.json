@@ -24,6 +24,7 @@
     "code.toReport": "để báo cáo",
     "code.submitReport": "Gửi báo cáo",
     "code.cancel": "Hủy",
+    "code.save": "Lưu",
     "code.thankForSubmittingTheReport": "Báo cáo của bạn đã được gửi. Cảm ơn bạn đã báo cáo, chúng tôi sẽ tìm hiểu vấn đề này.",
     "code.reportFailedToSubmit": "Gửi báo cáo không thành công. Vui lòng thử lại!"
 }

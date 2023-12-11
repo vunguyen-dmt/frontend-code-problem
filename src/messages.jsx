@@ -137,6 +137,11 @@ Additional information:
     defaultMessage: 'Cancel',
     description: '',
   },
+  save: {
+    id: 'code.save',
+    defaultMessage: 'Save',
+    description: '',
+  },
   thankForSubmittingTheReport: {
     id: 'code.thankForSubmittingTheReport',
     defaultMessage: 'Your report is submitted. Thank you for the report, our team will investigate the issue.',
