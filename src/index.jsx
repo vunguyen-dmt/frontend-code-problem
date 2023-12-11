@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet';
 import messages from './i18n';
 import './index.scss';
 import App from './App';
-
+import IframeMakerModal from './components/IframeMakerModal/IframeMakerModal';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
@@ -35,3 +35,5 @@ subscribe(APP_INIT_ERROR, (error) => {
 initialize({
   messages,
 });
+
+export { IframeMakerModal };
