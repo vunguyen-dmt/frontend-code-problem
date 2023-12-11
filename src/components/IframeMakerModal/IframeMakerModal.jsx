@@ -9,8 +9,8 @@ import Editor from '@monaco-editor/react';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from '../../messages';
 
-const IframeMakerModal = ({ tinymceEditorRef, intl }) => {
-  const [isOpen, open, close] = useToggle(false);
+const IframeMakerModal = ({ isOpen, close, tinymceEditorRef, intl }) => {
+//   const [isOpen, open, close] = useToggle(false);
   const [embedCode, setEmbedCode] = React.useState('');
   const [theme, setTheme] = React.useState('vs-dark');
   const [language, setLanguage] = React.useState('cpp');
@@ -63,21 +63,6 @@ const IframeMakerModal = ({ tinymceEditorRef, intl }) => {
   React.useEffect(() => {
     updateEmbedCode();
   }, [theme, language, version, height]);
-
-  const copy = () => {
-    const textarea = document.createElement('textarea');
-    textarea.textContent = embedCodeRef.current;
-    textarea.style.position = 'fixed';
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      return document.execCommand('copy');
-    } catch (ex) {
-      return '';
-    } finally {
-      document.body.removeChild(textarea);
-    }
-  };
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
